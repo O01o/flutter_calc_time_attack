@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
+// import 'package:flutter_calc_time_attack/model/issue_data.dart';
 
 void main() {
   print("Hello world!!");
@@ -14,7 +15,14 @@ void main() {
     issueDataList.forEach((data) {
       data = data.trim();
       if (index != 0 && index != issueDataList.length - 1) {
-        print("$index: $data");
+        int dataLength = data.length - 1;
+        if (data[dataLength] != "}") {
+          data = data.toString().substring(0, dataLength);
+        } else {
+          data = data.toString();
+        }
+        data = json.decode(data);
+        print(data["issue"]);
       }
       index++;
     });
