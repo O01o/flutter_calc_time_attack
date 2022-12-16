@@ -12,7 +12,10 @@ void main() {
     List issueDataList = issueDataString.split("\n");
     int index = 0;
     issueDataList.forEach((data) {
-      print("$index: $data");
+      data = data.trim();
+      if (index != 0 && index != issueDataList.length - 1) {
+        print("$index: $data");
+      }
       index++;
     });
   }
