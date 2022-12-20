@@ -14,7 +14,8 @@ class IssueData with _$IssueData {
     required String b,
     required String c,
     required String d,
-    required String answer
+    required int answerIndex,
+    required int? yourAnswerIndex
   }) = _IssueData;
 
   factory IssueData.fromJson(Map<String, Object?> json)

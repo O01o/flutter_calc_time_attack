@@ -3,7 +3,7 @@ import 'dart:convert';
 
 // import 'package:flutter_calc_time_attack/model/issue_data.dart';
 
-String issueDataPath = "./data/issue_data.json";
+String issueDataPath = "./issue_data.json";
 
 List<Map<String, dynamic>> jsonListDecoder(String path) {
   print("Hello world!!");

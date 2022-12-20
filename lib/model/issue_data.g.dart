@@ -13,7 +13,8 @@ _$_IssueData _$$_IssueDataFromJson(Map<String, dynamic> json) => _$_IssueData(
       b: json['b'] as String,
       c: json['c'] as String,
       d: json['d'] as String,
-      answer: json['answer'] as String,
+      answerIndex: json['answerIndex'] as int,
+      yourAnswerIndex: json['yourAnswerIndex'] as int?,
     );
 
 Map<String, dynamic> _$$_IssueDataToJson(_$_IssueData instance) =>
@@ -24,5 +25,6 @@ Map<String, dynamic> _$$_IssueDataToJson(_$_IssueData instance) =>
       'b': instance.b,
       'c': instance.c,
       'd': instance.d,
-      'answer': instance.answer,
+      'answerIndex': instance.answerIndex,
+      'yourAnswerIndex': instance.yourAnswerIndex,
     };
