@@ -3,10 +3,12 @@ import 'package:flutter/services.dart';
 
 import 'package:flutter_calc_time_attack/model/issue_data.dart';
 
-import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'dart:core';
 import 'dart:convert';
+
+import 'package:path_provider/path_provider.dart';
+import 'package:flutter_tex/flutter_tex.dart';
 
 enum SwitchChoice {
   a,
@@ -56,37 +58,6 @@ class _CalcTimeAttackScreenState extends State<CalcTimeAttackScreen> {
   }
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  void _incrementIssueCounter() {
-    setState(() {
-      if (_counter >= 5) {
-        _counter = 0;
-      } else {
-        _counter++;
-      }
-    });
-  }
-
-  void _decrementIssueCounter() {
-    setState(() {
-      if (_counter == 0) {
-        _counter = 5;
-      } else {
-        _counter--;
-      }
-    });
-  }
-
-  void _toggleSwitching(int index) {
-    setState(() {
-      // _issueListFreezed[_counter].copyWith(yourAnswerIndex: index);
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -98,6 +69,7 @@ class _CalcTimeAttackScreenState extends State<CalcTimeAttackScreen> {
           if (snapshot.data == null) {
             return const Text("data is null");
           } else {
+            int index = _counter + 1;
             List<IssueData> issueDataList = snapshot.data!;
             if (issueDataList.isEmpty) {
               return const Text("no FileSystemEntity exists");
@@ -107,11 +79,22 @@ class _CalcTimeAttackScreenState extends State<CalcTimeAttackScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('$_counter問目',
+                    Text('$index問目',
                       style: Theme.of(context).textTheme.headline4,
                     ),
-                    Text(issueData.issue),
-                    Text(issueData.formula),
+                    Text(issueData.issue, 
+                      style: Theme.of(context).textTheme.headline5,
+                    ),
+                    const TeXView(
+                      child: TeXViewDocument(r""" \( \rm\\TeX \)""")
+                    ),
+                    const TeXView(
+                      child: TeXViewDocument("f(x) = 2x + 3"),
+                    ),
+                    Text(issueData.formula,
+                      style: Theme.of(context).textTheme.headline4,
+                    ),
+
                     ListTile(
                       title: Text(issueData.a),
                       leading: Radio(
@@ -154,12 +137,26 @@ class _CalcTimeAttackScreenState extends State<CalcTimeAttackScreen> {
                     ),
                     ElevatedButton(
                       child: const Text("前の問題へ"),
-                      onPressed: _decrementIssueCounter
+                      onPressed: () {
+                        setState(() {
+                          if (_counter == 0) { _counter = issueDataList.length - 1; }
+                          else { _counter--; }
+                        });
+                      }
                     ),
                     ElevatedButton(
                       child: const Text("次の問題へ"),
-                      onPressed: _incrementIssueCounter
+                      onPressed: () {
+                        setState(() {
+                            if (_counter >= issueDataList.length - 1) { _counter = 0; }
+                            else { _counter++; }
+                        });
+                      }
                     ),
+                    ElevatedButton(
+                      child: const Text("問題を終了する"),
+                      onPressed: () { print("終了"); }
+                    )
                   ],
                 )
               );
