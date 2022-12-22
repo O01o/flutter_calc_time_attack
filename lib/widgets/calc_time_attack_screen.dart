@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:flutter_calc_time_attack/data/json_list_decoder.dart';
 import 'package:flutter_calc_time_attack/model/issue_data.dart';
 
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'dart:core';
 import 'dart:convert';
+
+enum SwitchChoice {
+  a,
+  b,
+  c,
+  d
+}
 
 class CalcTimeAttackScreen extends StatefulWidget {
   const CalcTimeAttackScreen({Key? key, required this.title}) : super(key: key);
@@ -19,8 +25,8 @@ class CalcTimeAttackScreen extends StatefulWidget {
 }
 
 class _CalcTimeAttackScreenState extends State<CalcTimeAttackScreen> {
-  int _counter = 1;
-  // List<Map<String, dynamic>> = ;
+  int _counter = 0;
+  SwitchChoice _switchChoice = SwitchChoice.a;
 
   Future<String> get _issueJsonString async {
     return rootBundle.loadString('assets/data/sample_data.json');
@@ -33,17 +39,10 @@ class _CalcTimeAttackScreenState extends State<CalcTimeAttackScreen> {
     print("file system entity list: $fileSystemEntityList");
     
     if (fileSystemEntityList.isEmpty) {
-      print("fse null course");
-      // File sampleData = File('assets/data/issue_data.json');
       String sampleData = await _issueJsonString;
-      print("next?");
-      // IssueData issueData = jsonDecode(sampleData);
       Map<String, dynamic> jsonMap = json.decode(sampleData);
-      print("next?");
       IssueData issueData = IssueData.fromJson(jsonMap);
-      print("next?");
       issueDataList.add(issueData);
-      print("next?");
     } else {
       fileSystemEntityList.forEach((element) {
         if (element is File) {
@@ -52,7 +51,6 @@ class _CalcTimeAttackScreenState extends State<CalcTimeAttackScreen> {
         }
       });
     }
-    print("file system entity list: $fileSystemEntityList");
     
     return issueDataList;
   }
@@ -65,7 +63,7 @@ class _CalcTimeAttackScreenState extends State<CalcTimeAttackScreen> {
   void _incrementIssueCounter() {
     setState(() {
       if (_counter >= 5) {
-        _counter = 1;
+        _counter = 0;
       } else {
         _counter++;
       }
@@ -74,7 +72,7 @@ class _CalcTimeAttackScreenState extends State<CalcTimeAttackScreen> {
 
   void _decrementIssueCounter() {
     setState(() {
-      if (_counter == 1) {
+      if (_counter == 0) {
         _counter = 5;
       } else {
         _counter--;
@@ -114,10 +112,46 @@ class _CalcTimeAttackScreenState extends State<CalcTimeAttackScreen> {
                     ),
                     Text(issueData.issue),
                     Text(issueData.formula),
-                    Text(issueData.a),
-                    Text(issueData.b),
-                    Text(issueData.c),
-                    Text(issueData.d),
+                    ListTile(
+                      title: Text(issueData.a),
+                      leading: Radio(
+                        value: SwitchChoice.a,
+                        groupValue: _switchChoice,
+                        onChanged: (SwitchChoice? value) {
+                          setState(() { _switchChoice = value!; });
+                        }
+                      ),
+                    ),
+                    ListTile(
+                      title: Text(issueData.b),
+                      leading: Radio(
+                        value: SwitchChoice.b,
+                        groupValue: _switchChoice,
+                        onChanged: (SwitchChoice? value) {
+                          setState(() { _switchChoice = value!; });
+                        }
+                      ),
+                    ),
+                    ListTile(
+                      title: Text(issueData.c),
+                      leading: Radio(
+                        value: SwitchChoice.c,
+                        groupValue: _switchChoice,
+                        onChanged: (SwitchChoice? value) {
+                          setState(() { _switchChoice = value!; });
+                        }
+                      ),
+                    ),
+                    ListTile(
+                      title: Text(issueData.d),
+                      leading: Radio(
+                        value: SwitchChoice.d,
+                        groupValue: _switchChoice,
+                        onChanged: (SwitchChoice? value) {
+                          setState(() { _switchChoice = value!; });
+                        }
+                      ),
+                    ),
                     ElevatedButton(
                       child: const Text("前の問題へ"),
                       onPressed: _decrementIssueCounter
@@ -126,7 +160,6 @@ class _CalcTimeAttackScreenState extends State<CalcTimeAttackScreen> {
                       child: const Text("次の問題へ"),
                       onPressed: _incrementIssueCounter
                     ),
-                    Radio(value: value, groupValue: groupValue, onChanged: onChanged)
                   ],
                 )
               );
