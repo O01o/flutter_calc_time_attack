@@ -27,7 +27,7 @@ mixin _$IssueData {
   String get c => throw _privateConstructorUsedError;
   String get d => throw _privateConstructorUsedError;
   int get answerIndex => throw _privateConstructorUsedError;
-  int? get yourAnswerIndex => throw _privateConstructorUsedError;
+  int get yourAnswerIndex => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -48,7 +48,7 @@ abstract class $IssueDataCopyWith<$Res> {
       String c,
       String d,
       int answerIndex,
-      int? yourAnswerIndex});
+      int yourAnswerIndex});
 }
 
 /// @nodoc
@@ -71,7 +71,7 @@ class _$IssueDataCopyWithImpl<$Res, $Val extends IssueData>
     Object? c = null,
     Object? d = null,
     Object? answerIndex = null,
-    Object? yourAnswerIndex = freezed,
+    Object? yourAnswerIndex = null,
   }) {
     return _then(_value.copyWith(
       issue: null == issue
@@ -102,10 +102,10 @@ class _$IssueDataCopyWithImpl<$Res, $Val extends IssueData>
           ? _value.answerIndex
           : answerIndex // ignore: cast_nullable_to_non_nullable
               as int,
-      yourAnswerIndex: freezed == yourAnswerIndex
+      yourAnswerIndex: null == yourAnswerIndex
           ? _value.yourAnswerIndex
           : yourAnswerIndex // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as int,
     ) as $Val);
   }
 }
@@ -125,7 +125,7 @@ abstract class _$$_IssueDataCopyWith<$Res> implements $IssueDataCopyWith<$Res> {
       String c,
       String d,
       int answerIndex,
-      int? yourAnswerIndex});
+      int yourAnswerIndex});
 }
 
 /// @nodoc
@@ -146,7 +146,7 @@ class __$$_IssueDataCopyWithImpl<$Res>
     Object? c = null,
     Object? d = null,
     Object? answerIndex = null,
-    Object? yourAnswerIndex = freezed,
+    Object? yourAnswerIndex = null,
   }) {
     return _then(_$_IssueData(
       issue: null == issue
@@ -177,10 +177,10 @@ class __$$_IssueDataCopyWithImpl<$Res>
           ? _value.answerIndex
           : answerIndex // ignore: cast_nullable_to_non_nullable
               as int,
-      yourAnswerIndex: freezed == yourAnswerIndex
+      yourAnswerIndex: null == yourAnswerIndex
           ? _value.yourAnswerIndex
           : yourAnswerIndex // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as int,
     ));
   }
 }
@@ -216,7 +216,7 @@ class _$_IssueData with DiagnosticableTreeMixin implements _IssueData {
   @override
   final int answerIndex;
   @override
-  final int? yourAnswerIndex;
+  final int yourAnswerIndex;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
@@ -283,7 +283,7 @@ abstract class _IssueData implements IssueData {
       required final String c,
       required final String d,
       required final int answerIndex,
-      required final int? yourAnswerIndex}) = _$_IssueData;
+      required final int yourAnswerIndex}) = _$_IssueData;
 
   factory _IssueData.fromJson(Map<String, dynamic> json) =
       _$_IssueData.fromJson;
@@ -303,7 +303,7 @@ abstract class _IssueData implements IssueData {
   @override
   int get answerIndex;
   @override
-  int? get yourAnswerIndex;
+  int get yourAnswerIndex;
   @override
   @JsonKey(ignore: true)
   _$$_IssueDataCopyWith<_$_IssueData> get copyWith =>

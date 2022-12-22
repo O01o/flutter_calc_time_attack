@@ -19,50 +19,66 @@ class CalcTimeAttackScreen extends StatefulWidget {
 }
 
 class _CalcTimeAttackScreenState extends State<CalcTimeAttackScreen> {
-  int _counter = 0;
+  int _counter = 1;
   // List<Map<String, dynamic>> = ;
 
   Future<String> get _issueJsonString async {
-    return rootBundle.loadString('assets/data/issue_data.json');
+    return rootBundle.loadString('assets/data/sample_data.json');
   }
 
-  Future<List<Map<String, dynamic>>> get _issueJsonListMap async {
-    String issueJsonString = await _issueJsonString;
-    List<Map<String, dynamic>> issueJsonListMap = json.decode(issueJsonString);
-    print("issueJsonListMap: $issueJsonListMap");
-    return issueJsonListMap;
+  Future<List<IssueData>> get _issueDataList async {
+    Directory directory = await getApplicationDocumentsDirectory();
+    List<FileSystemEntity> fileSystemEntityList = directory.listSync();
+    List<IssueData> issueDataList = [];
+    print("file system entity list: $fileSystemEntityList");
+    
+    if (fileSystemEntityList.isEmpty) {
+      print("fse null course");
+      // File sampleData = File('assets/data/issue_data.json');
+      String sampleData = await _issueJsonString;
+      print("next?");
+      // IssueData issueData = jsonDecode(sampleData);
+      Map<String, dynamic> jsonMap = json.decode(sampleData);
+      print("next?");
+      IssueData issueData = IssueData.fromJson(jsonMap);
+      print("next?");
+      issueDataList.add(issueData);
+      print("next?");
+    } else {
+      fileSystemEntityList.forEach((element) {
+        if (element is File) {
+          IssueData issueData = IssueData.fromJson(json.decode(element.readAsStringSync()));
+          issueDataList.add(issueData);
+        }
+      });
+    }
+    print("file system entity list: $fileSystemEntityList");
+    
+    return issueDataList;
   }
 
   @override
   void initState() {
     super.initState();
-
-    int index = 0;
   }
 
   void _incrementIssueCounter() {
     setState(() {
-      _counter++;
-      /*
-      if (_counter++ >= _issueListFreezed.length) {
-        _counter = 0;
+      if (_counter >= 5) {
+        _counter = 1;
       } else {
         _counter++;
       }
-      */
     });
   }
 
   void _decrementIssueCounter() {
     setState(() {
-      _counter--;
-      /*
-      if (_counter-- < 0) {
-        _counter = _issueListFreezed.length - 1;
+      if (_counter == 1) {
+        _counter = 5;
       } else {
         _counter--;
       }
-      */
     });
   }
 
@@ -78,57 +94,45 @@ class _CalcTimeAttackScreenState extends State<CalcTimeAttackScreen> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter問目',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            
-            FutureBuilder(
-              future: _issueJsonString,
-              builder: (context, AsyncSnapshot snapshot) {
-                if (snapshot.hasData) {
-                  return Text(snapshot.data);
-                } else {
-                  return const Text("data loading...");
-                }
-              }
-            ),
-            
-            FutureBuilder(
-              future: _issueJsonListMap,
-              builder: (context, AsyncSnapshot snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Text("get data");
-                } else {
-                  return const Text("data loading...");
-                }
-              }
-            ),
-            
-            /*
-            RadioListTile(
-              value: value,
-              groupValue: groupValue,
-              onChanged: onChanged
-            ),
-            */
-            ElevatedButton(
-              child: const Text("前の問題へ"),
-              onPressed: _decrementIssueCounter
-            ),
-            ElevatedButton(
-              child: const Text("次の問題へ"),
-              onPressed: _incrementIssueCounter
-            ),
-          ],
-        ),
+      body: FutureBuilder(
+        future: _issueDataList,
+        builder: (context, AsyncSnapshot snapshot) {
+          if (snapshot.data == null) {
+            return const Text("data is null");
+          } else {
+            List<IssueData> issueDataList = snapshot.data!;
+            if (issueDataList.isEmpty) {
+              return const Text("no FileSystemEntity exists");
+            } else {
+              IssueData issueData = issueDataList[_counter];
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('$_counter問目',
+                      style: Theme.of(context).textTheme.headline4,
+                    ),
+                    Text(issueData.issue),
+                    Text(issueData.formula),
+                    Text(issueData.a),
+                    Text(issueData.b),
+                    Text(issueData.c),
+                    Text(issueData.d),
+                    ElevatedButton(
+                      child: const Text("前の問題へ"),
+                      onPressed: _decrementIssueCounter
+                    ),
+                    ElevatedButton(
+                      child: const Text("次の問題へ"),
+                      onPressed: _incrementIssueCounter
+                    ),
+                    Radio(value: value, groupValue: groupValue, onChanged: onChanged)
+                  ],
+                )
+              );
+            }
+          }
+        }
       )
     );
   }
