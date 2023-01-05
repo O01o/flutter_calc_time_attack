@@ -8,7 +8,6 @@ import 'dart:core';
 import 'dart:convert';
 
 import 'package:path_provider/path_provider.dart';
-import 'package:flutter_tex/flutter_tex.dart';
 
 enum SwitchChoice {
   a,
@@ -31,25 +30,33 @@ class _CalcTimeAttackScreenState extends State<CalcTimeAttackScreen> {
   SwitchChoice _switchChoice = SwitchChoice.a;
 
   Future<String> get _issueJsonString async {
-    return rootBundle.loadString('assets/data/sample_data.json');
+    // return rootBundle.loadString('assets/data/sample_data.json');
+    return rootBundle.loadString('assets/data/issue_data.json');
   }
 
   Future<List<IssueData>> get _issueDataList async {
     Directory directory = await getApplicationDocumentsDirectory();
     List<FileSystemEntity> fileSystemEntityList = directory.listSync();
+    // List<IssueData> issueDataList;
     List<IssueData> issueDataList = [];
     print("file system entity list: $fileSystemEntityList");
     
     if (fileSystemEntityList.isEmpty) {
+      print("Load from asset data...");
       String sampleData = await _issueJsonString;
-      Map<String, dynamic> jsonMap = json.decode(sampleData);
-      IssueData issueData = IssueData.fromJson(jsonMap);
-      issueDataList.add(issueData);
+      List<dynamic> jsonMapList = json.decode(sampleData);
+      for (Map<String, dynamic> element in jsonMapList) {
+        issueDataList.add(IssueData.fromJson(element));
+      }
     } else {
-      fileSystemEntityList.forEach((element) {
-        if (element is File) {
-          IssueData issueData = IssueData.fromJson(json.decode(element.readAsStringSync()));
-          issueDataList.add(issueData);
+      print("Load from ApplicationDocumentDirectory...");
+      fileSystemEntityList.forEach((fileSystemEntity) {
+        if (fileSystemEntity is File) {
+          String jsonString = fileSystemEntity.readAsStringSync();
+          List<dynamic> jsonMapList = json.decode(jsonString);
+          for (Map<String, dynamic> element in jsonMapList) {
+            issueDataList.add(IssueData.fromJson(element));
+          }
         }
       });
     }
@@ -84,12 +91,6 @@ class _CalcTimeAttackScreenState extends State<CalcTimeAttackScreen> {
                     ),
                     Text(issueData.issue, 
                       style: Theme.of(context).textTheme.headline5,
-                    ),
-                    const TeXView(
-                      child: TeXViewDocument(r""" \( \rm\\TeX \)""")
-                    ),
-                    const TeXView(
-                      child: TeXViewDocument("f(x) = 2x + 3"),
                     ),
                     Text(issueData.formula,
                       style: Theme.of(context).textTheme.headline4,

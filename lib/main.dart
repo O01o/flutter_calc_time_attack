@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_calc_time_attack/widgets/calc_time_attack_screen.dart';
+import 'package:flutter_calc_time_attack/widgets/calc_time_attack.dart';
+import 'package:flutter_calc_time_attack/widgets/score.dart';
+import 'package:flutter_calc_time_attack/widgets/home.dart';
+import 'package:flutter_calc_time_attack/widgets/calendar.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +19,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const CalcTimeAttackScreen(title: 'Calc Time Attack Screen'),
+      initialRoute: "/",
+      routes: {
+        "/": (context) => const HomeScreen(title: 'Home Screen'),
+        "/calc_time_attack":(context) => const CalcTimeAttackScreen(title: 'Calc Time Attack Screen'),
+        "/score":(context) => const ScoreScreen(title: 'Score Screen'),
+        "/calendar":(context) => const ScoreScreen(title: 'Calendar Screen'),
+      }
     );
   }
 }
