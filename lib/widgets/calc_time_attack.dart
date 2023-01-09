@@ -83,6 +83,16 @@ class CalcTimeAttackScreen extends ConsumerWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    StreamBuilder(
+                      stream: ref.watch(timerCounterProvider.stream),
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        int time = snapshot.data!;
+                        int hours = time ~/ 3600;
+                        int minutes = (time % 3600) ~/ 60;
+                        int seconds = time % 60;
+                        return Text("経過時間: $hours時間 $minutes分 $seconds秒");
+                      }
+                    ),
                     Text('$index問目',
                       style: Theme.of(context).textTheme.headline4,
                     ),

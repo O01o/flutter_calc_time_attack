@@ -35,6 +35,15 @@ class IssueData with _$IssueData {
     => _$IssueDataFromJson(json);
 }
 
+final timerCounterProvider = StreamProvider<int>((ref) async* {
+  int time = 0;
+
+  while (true) {
+    await Future.delayed(Duration(seconds: 1));
+    time++;
+    yield time;
+  }
+});
 
 final issueJsonStringProvider = FutureProvider<String>((ref) async {
   return rootBundle.loadString('assets/data/issue_data.json');

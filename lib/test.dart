@@ -35,8 +35,8 @@ void main() {
   print(map.runtimeType);
   
   DateTime now = DateTime.now();
+  print(now.toIso8601String());
   String datetimeString = "2023-01-01";
   DateTime datetime = DateTime.parse(datetimeString);
-  print(now.year);
-  print(datetime.year);
+  print(datetime.toIso8601String());
 }
