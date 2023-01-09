@@ -7,28 +7,22 @@ import 'dart:io';
 import 'dart:core';
 import 'dart:convert';
 
+import 'package:riverpod/riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:state_notifier/state_notifier.dart';
 import 'package:path_provider/path_provider.dart';
 
-enum SwitchChoice {
-  a,
-  b,
-  c,
-  d
-}
+import 'package:flutter_calc_time_attack/utils/switch_choice.dart';
 
-class CalcTimeAttackScreen extends StatefulWidget {
-  const CalcTimeAttackScreen({Key? key, required this.title}) : super(key: key);
+class CalcTimeAttackScreen extends ConsumerWidget {
+  CalcTimeAttackScreen({Key? key, required this.title}) : super(key: key);
 
   final String title;
   
-  @override
-  State<CalcTimeAttackScreen> createState() => _CalcTimeAttackScreenState();
-}
-
-class _CalcTimeAttackScreenState extends State<CalcTimeAttackScreen> {
   int _counter = 0;
   SwitchChoice _switchChoice = SwitchChoice.a;
 
+  /*
   Future<String> get _issueJsonString async {
     // return rootBundle.loadString('assets/data/sample_data.json');
     return rootBundle.loadString('assets/data/issue_data.json');
@@ -63,15 +57,18 @@ class _CalcTimeAttackScreenState extends State<CalcTimeAttackScreen> {
     
     return issueDataList;
   }
+  */
+
+  Stream<int> time = Stream.periodic(Duration(seconds: 1)); 
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(title),
       ),
       body: FutureBuilder(
-        future: _issueDataList,
+        future: ref.watch(issueDataListProvider.future),
         builder: (context, AsyncSnapshot snapshot) {
           if (snapshot.data == null) {
             return const Text("data is null");
@@ -95,7 +92,7 @@ class _CalcTimeAttackScreenState extends State<CalcTimeAttackScreen> {
                     Text(issueData.formula,
                       style: Theme.of(context).textTheme.headline4,
                     ),
-
+                    /*
                     ListTile(
                       title: Text(issueData.a),
                       leading: Radio(
@@ -154,9 +151,26 @@ class _CalcTimeAttackScreenState extends State<CalcTimeAttackScreen> {
                         });
                       }
                     ),
+                    */
                     ElevatedButton(
                       child: const Text("問題を終了する"),
-                      onPressed: () { print("終了"); }
+                      onPressed: () => showDialog(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                          title: const Text("アプリを終了しますか？"),
+                          content: const Text(""),
+                          actions: [
+                            ElevatedButton(
+                              child: const Text("いいえ"),
+                              onPressed: () => Navigator.pop(context, 'continue'),
+                            ),
+                            ElevatedButton(
+                              child: const Text("はい"),
+                              onPressed: () => Navigator.pushNamed(context, "/score"),
+                            ),
+                          ],
+                        )
+                      )
                     )
                   ],
                 )

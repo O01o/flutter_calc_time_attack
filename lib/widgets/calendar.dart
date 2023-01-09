@@ -7,20 +7,20 @@ import 'dart:io';
 import 'dart:core';
 import 'dart:convert';
 
+import 'package:riverpod/riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:state_notifier/state_notifier.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:table_calendar/table_calendar.dart';
 
-class CalendarScreen extends StatefulWidget {
-  const CalendarScreen({Key? key, required this.title}) : super(key: key);
+class CalendarScreen extends ConsumerWidget {
+  CalendarScreen({Key? key, required this.title}) : super(key: key);
 
   final String title;
   
-  @override
-  State<CalendarScreen> createState() => _CalendarScreenState();
-}
-
-class _CalendarScreenState extends State<CalendarScreen> {
   int _counter = 0;
 
+  /*
   Future<String> get _issueJsonString async {
     // return rootBundle.loadString('assets/data/sample_data.json');
     return rootBundle.loadString('assets/data/issue_data.json');
@@ -55,91 +55,22 @@ class _CalendarScreenState extends State<CalendarScreen> {
     
     return issueDataList;
   }
+  */
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    DateTime now = DateTime.now();
+    DateTime firstDay = DateTime.utc(now.year-50, 1, 1);
+    DateTime lastDay = DateTime.utc(now.year+50, 12, 31);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(title),
       ),
-      body: FutureBuilder(
-        future: _issueDataList,
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          List<IssueData> issueDataList = snapshot.data!;
-          
-          double scorePercent = 0;
-          for (IssueData issueData in issueDataList) {
-            if (issueData.answerIndex == issueData.yourAnswerIndex) {
-              scorePercent += 1;
-            }
-          }
-          scorePercent /= issueDataList.length;
-          scorePercent *= 100;
-
-          return CustomScrollView(
-            slivers: [
-              SliverList(
-                delegate: SliverChildListDelegate(
-                  [
-                    ElevatedButton(
-                      child: const Text("トップに戻る"),
-                      onPressed: () {
-                        print("トップに戻る");
-                      }
-                    ),
-                    Text("正解率: $scorePercent %"),
-                  ]
-                )
-              ),
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
-                    IssueData issueData = issueDataList[index];
-                    return Card(
-                      child: ListTile(
-                        title: Column(
-                          children: [
-                            Text(issueData.issue),
-                            Text(issueData.formula)
-                          ],
-                          mainAxisAlignment: MainAxisAlignment.start,
-                        ),
-                        subtitle: Column(
-                          children: [
-                            Text("a: " + issueData.a 
-                            + "  b: " + issueData.b 
-                            + "  c: " + issueData.c 
-                            + "  d: " + issueData.d),
-                            Text("answer: " + issueData.answerIndex.toString() 
-                            + "  your_answer: " + issueData.yourAnswerIndex.toString())
-                          ]
-                        ),
-                        tileColor: (issueData.answerIndex == issueData.yourAnswerIndex)
-                        ? const Color.fromARGB(255, 200, 255, 200)
-                        : const Color.fromARGB(255, 255, 200, 200),
-                      )
-                    );
-                  },
-                  childCount: issueDataList.length
-                ),
-              ),
-              SliverList(
-                delegate: SliverChildListDelegate(
-                  [
-                    Text("正解率: $scorePercent %"),
-                    ElevatedButton(
-                      child: const Text("トップに戻る"),
-                      onPressed: () {
-                        print("トップに戻る");
-                      }
-                    ),
-                  ]
-                )
-              ),
-            ],
-          );
-        },
+      body: TableCalendar(
+        focusedDay: now,
+        firstDay: firstDay,
+        lastDay: lastDay
       )
     );
   }

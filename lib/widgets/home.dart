@@ -7,25 +7,22 @@ import 'dart:io';
 import 'dart:core';
 import 'dart:convert';
 
+import 'package:riverpod/riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:state_notifier/state_notifier.dart';
 import 'package:path_provider/path_provider.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({Key? key, required this.title}) : super(key: key);
 
   final String title;
   
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(title),
       ),
       body: Center(
         child: Column(
@@ -35,13 +32,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ElevatedButton(
               child: const Text("問題を解く"),
               onPressed: () {
-                Navigator.pushNamed(context, './calc_time_attack');
+                Navigator.pushNamed(context, '/calc_time_attack');
               },
             ),
             ElevatedButton(
               child: const Text("日々の成果を確認する"),
               onPressed: () {
-                Navigator.pushNamed(context, './calendar');
+                Navigator.pushNamed(context, '/calendar');
               },
             ),
             ElevatedButton(

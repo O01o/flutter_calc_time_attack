@@ -1,5 +1,7 @@
 import 'dart:math';
 import 'dart:convert';
+import 'dart:core';
+
 void main() {
   int x0 = 120;
   int y0 = 120;
@@ -31,5 +33,10 @@ void main() {
 
   print(map);
   print(map.runtimeType);
-
+  
+  DateTime now = DateTime.now();
+  String datetimeString = "2023-01-01";
+  DateTime datetime = DateTime.parse(datetimeString);
+  print(now.year);
+  print(datetime.year);
 }

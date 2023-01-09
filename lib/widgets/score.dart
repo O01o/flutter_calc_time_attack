@@ -7,18 +7,16 @@ import 'dart:io';
 import 'dart:core';
 import 'dart:convert';
 
+import 'package:riverpod/riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:state_notifier/state_notifier.dart';
 import 'package:path_provider/path_provider.dart';
 
-class ScoreScreen extends StatefulWidget {
-  const ScoreScreen({Key? key, required this.title}) : super(key: key);
+class ScoreScreen extends ConsumerWidget {
+  ScoreScreen({Key? key, required this.title}) : super(key: key);
 
   final String title;
   
-  @override
-  State<ScoreScreen> createState() => _ScoreScreenState();
-}
-
-class _ScoreScreenState extends State<ScoreScreen> {
   int _counter = 0;
 
   Future<String> get _issueJsonString async {
@@ -57,11 +55,11 @@ class _ScoreScreenState extends State<ScoreScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(title),
       ),
       body: FutureBuilder(
         future: _issueDataList,
