@@ -15,7 +15,7 @@ final calendarJsonStringProvider = FutureProvider<String>((ref) async {
 });
 
 final calendarDataListProvider = FutureProvider<Map<String, int>>((ref) async {
-Directory directory = await getApplicationDocumentsDirectory();
+  Directory directory = await getApplicationDocumentsDirectory();
   List<FileSystemEntity> fileSystemEntityList = directory.listSync();
   // List<IssueData> issueDataList;
   print("file system entity list: $fileSystemEntityList");

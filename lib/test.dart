@@ -24,19 +24,37 @@ void main() {
     ]""";
   var data = json.decode(sampleData);
   data.forEach((element) => { print(element["issue"]) });
-
-  Map<String, dynamic> map = {
-    "data0": "aiueo",
-    "data1": 3,
-    "data2": true
-  };
-
-  print(map);
-  print(map.runtimeType);
   
   DateTime now = DateTime.now();
   print(now.toIso8601String());
   String datetimeString = "2023-01-01";
   DateTime datetime = DateTime.parse(datetimeString);
   print(datetime.toIso8601String());
+
+
+  Map<String, dynamic> map = {
+    "data0": "aiueo",
+    "data1": 3,
+    "data2": true
+  };
+  List<Map<String, dynamic>> mapList = [
+    map,
+    map,
+    map
+  ];
+  List<String> jsonList = [];
+  String jsonString = "";
+
+  for (Map<String, dynamic> map in mapList) {
+    jsonList.add(json.encode(map));
+  }
+  
+  jsonString = "[" + jsonList.join(", ") + "]";
+  print(jsonString);
+
+  List<dynamic> jsonAfter = json.decode(jsonString);
+  for (var element in jsonAfter) {
+    print(element["data0"]);
+    print(element);
+  }
 }

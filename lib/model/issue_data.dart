@@ -1,9 +1,12 @@
 // This file is "main.dart"
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
 
 import 'dart:io';
+import 'dart:html';
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
@@ -51,7 +54,7 @@ final issueJsonStringProvider = FutureProvider<String>((ref) async {
 
 
 final issueDataListProvider = FutureProvider<List<IssueData>>((ref) async {
-Directory directory = await getApplicationDocumentsDirectory();
+  Directory directory = await getApplicationDocumentsDirectory();
   List<FileSystemEntity> fileSystemEntityList = directory.listSync();
   // List<IssueData> issueDataList;
   List<IssueData> issueDataList = [];
@@ -81,20 +84,55 @@ Directory directory = await getApplicationDocumentsDirectory();
 });
 
 
-final IssueDataListNotifierProvider = StateNotifierProvider<IssueDataListNotifier, List<IssueData>>((ref) {
-  return IssueDataListNotifier();
+final indexProvider = StateProvider<int>((ref) => 0);
+
+
+final indexNotifierProvider = StateNotifierProvider<IndexNotifier, int>((ref) {
+  return IndexNotifier(ref);
 });
 
+class IndexNotifier extends StateNotifier<int> {
+  IndexNotifier(ref): super(0);
+
+  void increment(int length) {
+    if (state >= length - 1) { state = 0; }
+    else { state++; }
+  }
+
+  void decrement(int length) {
+    if (state == 0) { state = length -1; }
+    else { state--; }
+  }
+}
+
+
+final switchChoiceProvider = StateProvider<SwitchChoice>((ref) => SwitchChoice.a);
+
+
+final issueDataListNotifierProvider = StateNotifierProvider<IssueDataListNotifier, List<IssueData>>((ref) {
+  return IssueDataListNotifier(ref);
+});
 
 class IssueDataListNotifier extends StateNotifier<List<IssueData>> {
-  IssueDataListNotifier(): super([]);
+  IssueDataListNotifier(ref): super(ref.watch(issueDataListProvider.future));
 
-  void answer(List<IssueData> issueData, int index, SwitchChoice switchChoice) {
-    state = [
-      if (switchChoice == SwitchChoice.a) state[index].copyWith(yourAnswerIndex: 0)
-      else if (switchChoice == SwitchChoice.b) state[index].copyWith(yourAnswerIndex: 1)
-      else if (switchChoice == SwitchChoice.c) state[index].copyWith(yourAnswerIndex: 2)
-      else if (switchChoice == SwitchChoice.d) state[index].copyWith(yourAnswerIndex: 3)
-    ];
+  void answer(int index, SwitchChoice switchChoice) {
+    if (switchChoice == SwitchChoice.a) { state[index].copyWith(yourAnswerIndex: 0); }
+    else if (switchChoice == SwitchChoice.b) { state[index].copyWith(yourAnswerIndex: 1); }
+    else if (switchChoice == SwitchChoice.c) { state[index].copyWith(yourAnswerIndex: 2); }
+    else if (switchChoice == SwitchChoice.d) { state[index].copyWith(yourAnswerIndex: 3); }
   }
+}
+
+void finish(List<IssueData> issueDataList, Future<Directory> path, String fileName) {
+  String jsonString = "[]";
+  List<String> jsonList = [];
+  for (IssueData issueData in issueDataList) {
+    // IssueData.toJson so convert to string, and add to jsonList
+    Map<String, dynamic> jsonMap = issueData.toJson();
+    jsonList.add(json.encode(jsonMap));
+  }
+  // just join with ''.join(issueList, ", ")
+  jsonString = "[" + jsonList.join(", ") + "]";
+  
 }
