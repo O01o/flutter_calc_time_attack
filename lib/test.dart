@@ -38,6 +38,8 @@ void main() {
     "data1": 3,
     "data2": true
   };
+
+  /*
   List<Map<String, dynamic>> mapList = [
     map,
     map,
@@ -45,23 +47,28 @@ void main() {
   ];
   List<String> jsonList = [];
   String jsonString = "";
-
   for (Map<String, dynamic> map in mapList) {
     jsonList.add(json.encode(map));
   }
-  
   jsonString = "[" + jsonList.join(", ") + "]";
   print(jsonString);
-
+  */
+  /*
   List<dynamic> jsonAfter = json.decode(jsonString);
   for (var element in jsonAfter) {
     print(element["data0"]);
     print(element);
   }
-
+  */
+  /*
   var dir = Directory('hoge').create();
   var myFile = File('hoge/file.txt');
   // myFile.writeAsStringSync("aiueo");
   // myFile.writeAsStringSync("12345");
   myFile.writeAsStringSync("abc");
+  */
+
+  print(map);
+  map["data3"] = -3.5;
+  print(map);
 }

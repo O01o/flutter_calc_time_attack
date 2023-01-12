@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_calc_time_attack/model/calendar_stamp.dart';
 
 import 'package:flutter_calc_time_attack/model/issue_data.dart';
 
@@ -20,17 +21,24 @@ class CalendarScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    DateTime now = DateTime.now();
+    final _focusedDay = ref.watch(focusedDayStateProvider);
+    final _selectedDay = ref.watch(selectedDayStateProvider);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
       ),
       body: TableCalendar(
-        focusedDay: now,
-        firstDay: DateTime.utc(now.year-50, 1, 1),
-        lastDay: DateTime.utc(now.year+50, 12, 31),
-        
+        focusedDay: _focusedDay,
+        firstDay: DateTime.utc(_focusedDay.year-50, 1, 1),
+        lastDay: DateTime.utc(_focusedDay.year+50, 12, 31),
+        selectedDayPredicate: (day) {
+          return isSameDay(_selectedDay, day);
+        },
+        onDaySelected: (selectedDay, focusedDay) {
+          ref.watch(selectedDayStateProvider.notifier).state = selectedDay;
+          ref.watch(focusedDayStateProvider.notifier).state = focusedDay;
+        },
       )
     );
   }

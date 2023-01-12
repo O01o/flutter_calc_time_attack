@@ -104,7 +104,7 @@ class CalcTimeAttackScreen extends ConsumerWidget {
                               child: const Text("はい"),
                               onPressed: () { 
                                 jsonifyIssueDataList(issueDataList, getApplicationDocumentsDirectory(), "issue_data.json");
-                                Navigator.pushNamed(context, "/score");
+                                Navigator.pushNamedAndRemoveUntil(context, "/score", (route) => false);
                               },
                             ),
                           ],

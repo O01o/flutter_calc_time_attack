@@ -49,10 +49,17 @@ void jsonifyIssueDataList(List<IssueData> issueDataList, Future<Directory> path,
 
 
 final issueDataListFutureProvider = FutureProvider<List<IssueData>>((ref) async {
-  Directory directory = await getApplicationDocumentsDirectory();
-  // List<FileSystemEntity> fileSystemEntityList = directory.listSync();
-  List<FileSystemEntity> fileSystemEntityList = directory.listSync();
   List<IssueData> issueDataList = [];
+  // only asset load, it discribes below.
+  String sampleData = await rootBundle.loadString('assets/data/issue_data.json');
+  List<dynamic> jsonMapList = json.decode(sampleData);
+  for (Map<String, dynamic> element in jsonMapList) {
+    issueDataList.add(IssueData.fromJson(element));
+  }
+  // accept both getApplicationDocumentDirectory and Asset data, just below.
+  /*
+  Directory directory = await getApplicationDocumentsDirectory();
+  List<FileSystemEntity> fileSystemEntityList = directory.listSync();
   print("file system entity list: $fileSystemEntityList");
   
   if (fileSystemEntityList.isEmpty) {
@@ -74,7 +81,7 @@ final issueDataListFutureProvider = FutureProvider<List<IssueData>>((ref) async 
       }
     }
   }
-  
+  */
   return issueDataList;
 });
 
@@ -117,6 +124,7 @@ class IndexNotifier extends StateNotifier<int> {
 
 
 final switchChoiceProvider = StateProvider<SwitchChoice>((ref) => SwitchChoice.a);
+
 
 final timerStreamProvider = StreamProvider<int>((ref) async* {
   int time = 0;

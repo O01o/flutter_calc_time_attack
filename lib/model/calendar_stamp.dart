@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:state_notifier/state_notifier.dart';
 import 'package:path_provider/path_provider.dart';
 
 
@@ -15,11 +14,14 @@ final calendarJsonStringProvider = FutureProvider<String>((ref) async {
 });
 
 final calendarDataListProvider = FutureProvider<Map<String, int>>((ref) async {
+  String calendarStampString = await rootBundle.loadString('assets/data/issue_data.json');
+  Map<String, int> jsonMap = {};
+  jsonMap = json.decode(calendarStampString);
+  
+  /*
   Directory directory = await getApplicationDocumentsDirectory();
   List<FileSystemEntity> fileSystemEntityList = directory.listSync();
-  // List<IssueData> issueDataList;
   print("file system entity list: $fileSystemEntityList");
-  Map<String, int> jsonMap = {};
   
   if (fileSystemEntityList.isEmpty) {
     print("Load from asset data...");
@@ -34,6 +36,28 @@ final calendarDataListProvider = FutureProvider<Map<String, int>>((ref) async {
       }
     });
   }
+  */
 
   return jsonMap;
 });
+
+
+void jsonifyCalendarStamp(Map<String, int> jsonMap, String dateString, int time, Future<Directory> path, String fileName) {
+  jsonMap[dateString] = time;
+  String jsonString = json.encode(jsonMap);
+  var jsonFile = File(fileName);
+  jsonFile.writeAsStringSync(jsonString);
+}
+
+
+final selectedDayStateProvider = StateProvider<DateTime>((ref) => DateTime.now());
+
+
+final focusedDayStateProvider = StateProvider<DateTime>((ref) => DateTime.now());
+
+
+
+
+
+
+
