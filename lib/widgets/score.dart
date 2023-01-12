@@ -78,19 +78,6 @@ class ScoreScreen extends ConsumerWidget {
           return CustomScrollView(
             slivers: [
               SliverList(
-                delegate: SliverChildListDelegate(
-                  [
-                    ElevatedButton(
-                      child: const Text("トップに戻る"),
-                      onPressed: () {
-                        Navigator.pushNamed(context, "/");
-                      }
-                    ),
-                    Text("正解率: $scorePercent %"),
-                  ]
-                )
-              ),
-              SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
                     IssueData issueData = issueDataList[index];
@@ -105,12 +92,8 @@ class ScoreScreen extends ConsumerWidget {
                         ),
                         subtitle: Column(
                           children: [
-                            Text("a: " + issueData.a 
-                            + "  b: " + issueData.b 
-                            + "  c: " + issueData.c 
-                            + "  d: " + issueData.d),
-                            Text("answer: " + issueData.answerIndex.toString() 
-                            + "  your_answer: " + issueData.yourAnswerIndex.toString())
+                            Text("a: ${issueData.a}  b: ${issueData.b}  c: ${issueData.c}  d: ${issueData.d}"),
+                            Text("answer: ${issueData.answerIndex.toString()}  your_answer: ${issueData.yourAnswerIndex.toString()}")
                           ]
                         ),
                         tileColor: (issueData.answerIndex == issueData.yourAnswerIndex)
@@ -126,11 +109,24 @@ class ScoreScreen extends ConsumerWidget {
                 delegate: SliverChildListDelegate(
                   [
                     Text("正解率: $scorePercent %"),
+                    // Image.asset('assets/images/Miku.png'),
                     ElevatedButton(
                       child: const Text("トップに戻る"),
-                      onPressed: () {
-                        Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false);
-                      }
+                      onPressed: () => showDialog(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                          title: const Text("今回のコラム"),
+                          content: Image.asset('assets/images/Miku.png'),
+                          actions: [
+                            ElevatedButton(
+                              child: const Text("終了"),
+                              onPressed: () { 
+                                Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false);
+                              },
+                            ),
+                          ],
+                        )
+                      )
                     ),
                   ]
                 )
