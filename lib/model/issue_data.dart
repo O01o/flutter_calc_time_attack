@@ -1,19 +1,13 @@
-// This file is "main.dart"¥
-
-import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
 
 import 'dart:io';
 import 'dart:convert';
-import 'dart:html';
 
 import 'package:flutter/services.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:state_notifier/state_notifier.dart';
 import 'package:path_provider/path_provider.dart';
-
 import 'package:flutter_calc_time_attack/utils/switch_choice.dart';
 
 
@@ -37,25 +31,27 @@ class IssueData with _$IssueData {
     => _$IssueDataFromJson(json);
 }
 
-final timerCounterProvider = StreamProvider<int>((ref) async* {
-  int time = 0;
-
-  while (true) {
-    await Future.delayed(Duration(seconds: 1));
-    time++;
-    yield time;
-  }
-});
-
 final issueJsonStringProvider = FutureProvider<String>((ref) async {
   return rootBundle.loadString('assets/data/issue_data.json');
 });
 
 
-final issueDataListProvider = FutureProvider<List<IssueData>>((ref) async {
+void jsonifyIssueDataList(List<IssueData> issueDataList, Future<Directory> path, String fileName) {
+  List<String> jsonList = [];
+  for (IssueData issueData in issueDataList) {
+    Map<String, dynamic> jsonMap = issueData.toJson();
+    jsonList.add(json.encode(jsonMap));
+  }
+  String jsonString = "[" + jsonList.join(", ") + "]";
+  var jsonFile = File(fileName);
+  // jsonFile.writeAsStringSync(jsonString);
+}
+
+
+final issueDataListFutureProvider = FutureProvider<List<IssueData>>((ref) async {
   Directory directory = await getApplicationDocumentsDirectory();
+  // List<FileSystemEntity> fileSystemEntityList = directory.listSync();
   List<FileSystemEntity> fileSystemEntityList = directory.listSync();
-  // List<IssueData> issueDataList;
   List<IssueData> issueDataList = [];
   print("file system entity list: $fileSystemEntityList");
   
@@ -68,7 +64,7 @@ final issueDataListProvider = FutureProvider<List<IssueData>>((ref) async {
     }
   } else {
     print("Load from ApplicationDocumentDirectory...");
-    fileSystemEntityList.forEach((fileSystemEntity) {
+    for (var fileSystemEntity in fileSystemEntityList) {
       if (fileSystemEntity is File) {
         String jsonString = fileSystemEntity.readAsStringSync();
         List<dynamic> jsonMapList = json.decode(jsonString);
@@ -76,14 +72,29 @@ final issueDataListProvider = FutureProvider<List<IssueData>>((ref) async {
           issueDataList.add(IssueData.fromJson(element));
         }
       }
-    });
+    }
   }
   
   return issueDataList;
 });
 
 
-final indexProvider = StateProvider<int>((ref) => 0);
+final issueDataListNotifierProvider = StateNotifierProvider<IssueDataListNotifier, List<IssueData>>((ref) {
+  return IssueDataListNotifier(ref);
+});
+
+
+class IssueDataListNotifier extends StateNotifier<List<IssueData>> {
+  IssueDataListNotifier(ref): super([]);
+  void answer(int index, SwitchChoice switchChoice) {
+    state = [
+      if (switchChoice == SwitchChoice.a) state[index].copyWith(yourAnswerIndex: 0)
+      else if (switchChoice == SwitchChoice.b) state[index].copyWith(yourAnswerIndex: 1)
+      else if (switchChoice == SwitchChoice.c) state[index].copyWith(yourAnswerIndex: 2)
+      else if (switchChoice == SwitchChoice.d) state[index].copyWith(yourAnswerIndex: 3)
+    ];
+  }
+}
 
 
 final indexNotifierProvider = StateNotifierProvider<IndexNotifier, int>((ref) {
@@ -107,31 +118,12 @@ class IndexNotifier extends StateNotifier<int> {
 
 final switchChoiceProvider = StateProvider<SwitchChoice>((ref) => SwitchChoice.a);
 
+final timerStreamProvider = StreamProvider<int>((ref) async* {
+  int time = 0;
 
-final issueDataListNotifierProvider = StateNotifierProvider<IssueDataListNotifier, List<IssueData>>((ref) {
-  return IssueDataListNotifier(ref);
+  while (true) {
+    await Future.delayed(const Duration(seconds: 1));
+    time++;
+    yield time;
+  }
 });
-
-class IssueDataListNotifier extends StateNotifier<List<IssueData>> {
-  IssueDataListNotifier(ref): super(ref.watch(issueDataListProvider.future));
-
-  void answer(int index, SwitchChoice switchChoice) {
-    if (switchChoice == SwitchChoice.a) { state[index].copyWith(yourAnswerIndex: 0); }
-    else if (switchChoice == SwitchChoice.b) { state[index].copyWith(yourAnswerIndex: 1); }
-    else if (switchChoice == SwitchChoice.c) { state[index].copyWith(yourAnswerIndex: 2); }
-    else if (switchChoice == SwitchChoice.d) { state[index].copyWith(yourAnswerIndex: 3); }
-  }
-}
-
-void finish(List<IssueData> issueDataList, Future<Directory> path, String fileName) {
-  String jsonString = "[]";
-  List<String> jsonList = [];
-  for (IssueData issueData in issueDataList) {
-    // IssueData.toJson so convert to string, and add to jsonList
-    Map<String, dynamic> jsonMap = issueData.toJson();
-    jsonList.add(json.encode(jsonMap));
-  }
-  // just join with ''.join(issueList, ", ")
-  jsonString = "[" + jsonList.join(", ") + "]";
-  
-}

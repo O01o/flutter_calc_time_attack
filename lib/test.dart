@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:convert';
 import 'dart:core';
+import 'dart:io';
 
 void main() {
   int x0 = 120;
@@ -57,4 +58,10 @@ void main() {
     print(element["data0"]);
     print(element);
   }
+
+  var dir = Directory('hoge').create();
+  var myFile = File('hoge/file.txt');
+  // myFile.writeAsStringSync("aiueo");
+  // myFile.writeAsStringSync("12345");
+  myFile.writeAsStringSync("abc");
 }

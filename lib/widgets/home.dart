@@ -28,7 +28,6 @@ class HomeScreen extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text("aiueo"),
             ElevatedButton(
               child: const Text("問題を解く"),
               onPressed: () {
