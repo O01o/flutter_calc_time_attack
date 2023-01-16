@@ -6,6 +6,7 @@ import 'package:flutter_calc_time_attack/model/issue_data.dart';
 import 'dart:io';
 import 'dart:core';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:riverpod/riverpod.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -112,21 +113,25 @@ class ScoreScreen extends ConsumerWidget {
                     // Image.asset('assets/images/Miku.png'),
                     ElevatedButton(
                       child: const Text("トップに戻る"),
-                      onPressed: () => showDialog(
-                        context: context,
-                        builder: (BuildContext context) => AlertDialog(
-                          title: const Text("今回のコラム"),
-                          content: Image.asset('assets/images/Miku.png'),
-                          actions: [
-                            ElevatedButton(
-                              child: const Text("終了"),
-                              onPressed: () { 
-                                Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false);
-                              },
-                            ),
-                          ],
-                        )
-                      )
+                      onPressed: () {
+                        int randInt = Random().nextInt(3);
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                            title: const Text("今回のコラム"),
+                            content: Image.asset('assets/images/trivia_$randInt.png'),
+                            actions: [
+                              ElevatedButton(
+                                child: const Text("終了"),
+                                onPressed: () { 
+                                  Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false);
+                                },
+                              ),
+                            ],
+                          )
+                        );
+                      }
+                      
                     ),
                   ]
                 )

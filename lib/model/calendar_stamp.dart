@@ -13,7 +13,7 @@ final calendarJsonStringProvider = FutureProvider<String>((ref) async {
   return rootBundle.loadString('assets/data/calendar_stamp.json');
 });
 
-final calendarDataListProvider = FutureProvider<Map<String, int>>((ref) async {
+final calendarStampFutureProvider = FutureProvider<Map<String, int>>((ref) async {
   String calendarStampString = await rootBundle.loadString('assets/data/issue_data.json');
   Map<String, int> jsonMap = {};
   jsonMap = json.decode(calendarStampString);

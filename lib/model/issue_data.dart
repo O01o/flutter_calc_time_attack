@@ -7,7 +7,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:path_provider/path_provider.dart';
+// import 'package:path_provider/path_provider.dart';
 import 'package:flutter_calc_time_attack/utils/switch_choice.dart';
 
 
@@ -126,7 +126,7 @@ class IndexNotifier extends StateNotifier<int> {
 final switchChoiceProvider = StateProvider<SwitchChoice>((ref) => SwitchChoice.a);
 
 
-final timerStreamProvider = StreamProvider<int>((ref) async* {
+final timerStreamProvider = StreamProvider.autoDispose<int>((ref) async* {
   int time = 0;
 
   while (true) {
