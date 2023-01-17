@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
 
@@ -42,13 +43,13 @@ void jsonifyIssueDataList(List<IssueData> issueDataList, Future<Directory> path,
     Map<String, dynamic> jsonMap = issueData.toJson();
     jsonList.add(json.encode(jsonMap));
   }
-  String jsonString = "[" + jsonList.join(", ") + "]";
+  String jsonString = "[${jsonList.join(", ")}]";
   var jsonFile = File(fileName);
   // jsonFile.writeAsStringSync(jsonString);
 }
 
 
-final issueDataListFutureProvider = FutureProvider<List<IssueData>>((ref) async {
+final issueDataListFutureProvider = FutureProvider.autoDispose<List<IssueData>>((ref) async {
   List<IssueData> issueDataList = [];
   // only asset load, it discribes below.
   String sampleData = await rootBundle.loadString('assets/data/issue_data.json');
@@ -86,25 +87,33 @@ final issueDataListFutureProvider = FutureProvider<List<IssueData>>((ref) async 
 });
 
 
-final issueDataListNotifierProvider = StateNotifierProvider<IssueDataListNotifier, List<IssueData>>((ref) {
+final issueDataListNotifierProvider = StateNotifierProvider.autoDispose<IssueDataListNotifier, List<IssueData>>((ref) {
   return IssueDataListNotifier(ref);
 });
 
 
 class IssueDataListNotifier extends StateNotifier<List<IssueData>> {
   IssueDataListNotifier(ref): super([]);
+
   void answer(int index, SwitchChoice switchChoice) {
+    print("${state.runtimeType}");
     state = [
-      if (switchChoice == SwitchChoice.a) state[index].copyWith(yourAnswerIndex: 0)
-      else if (switchChoice == SwitchChoice.b) state[index].copyWith(yourAnswerIndex: 1)
-      else if (switchChoice == SwitchChoice.c) state[index].copyWith(yourAnswerIndex: 2)
-      else if (switchChoice == SwitchChoice.d) state[index].copyWith(yourAnswerIndex: 3)
+      for (int i=0; i<state.length; i++)
+        if (i == index && switchChoice == SwitchChoice.a) state[i].copyWith(yourAnswerIndex: 0)
+        else if (i == index && switchChoice == SwitchChoice.b) state[i].copyWith(yourAnswerIndex: 1)
+        else if (i == index && switchChoice == SwitchChoice.c) state[i].copyWith(yourAnswerIndex: 2)
+        else if (i == index && switchChoice == SwitchChoice.d) state[i].copyWith(yourAnswerIndex: 3)
+        else state[i]
     ];
+    
+    for (final element in state) {
+      print("${element.formula}, ${element.yourAnswerIndex}");
+    }
   }
 }
 
 
-final indexNotifierProvider = StateNotifierProvider<IndexNotifier, int>((ref) {
+final indexNotifierProvider = StateNotifierProvider.autoDispose<IndexNotifier, int>((ref) {
   return IndexNotifier(ref);
 });
 
@@ -123,7 +132,21 @@ class IndexNotifier extends StateNotifier<int> {
 }
 
 
-final switchChoiceProvider = StateProvider<SwitchChoice>((ref) => SwitchChoice.a);
+final switchChoiceProvider = StateNotifierProvider<SwitchChoiceNotifier, SwitchChoice>((ref) {
+  return SwitchChoiceNotifier(ref);
+});
+
+class SwitchChoiceNotifier extends StateNotifier<SwitchChoice> {
+  SwitchChoiceNotifier(ref): super(SwitchChoice.none);
+
+  void switching(int yourAnswerIndex) {
+      if (yourAnswerIndex == 0) { state = SwitchChoice.a; }
+      else if (yourAnswerIndex == 1) { state = SwitchChoice.b; }
+      else if (yourAnswerIndex == 2) { state = SwitchChoice.c; }
+      else if (yourAnswerIndex == 3) { state = SwitchChoice.d; }
+      else { state = SwitchChoice.none; }
+  }
+}
 
 
 final timerStreamProvider = StreamProvider.autoDispose<int>((ref) async* {

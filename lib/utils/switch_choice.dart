@@ -2,5 +2,6 @@ enum SwitchChoice {
   a,
   b,
   c,
-  d
+  d,
+  none
 }

@@ -31,7 +31,7 @@ class MyApp extends ConsumerWidget {
       routes: {
         "/": (context) => const HomeScreen(title: 'Home Screen'),
         "/calc_time_attack":(context) => CalcTimeAttackScreen(title: 'Calc Time Attack Screen'),
-        "/score":(context) => ScoreScreen(title: 'Score Screen'),
+        "/score":(context) => ScoreScreen(title: 'Score Screen', issueDataList: [], time: 0),
         "/calendar":(context) => CalendarScreen(title: 'Calendar Screen'),
       }
     );

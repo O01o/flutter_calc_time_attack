@@ -31,7 +31,7 @@ class HomeScreen extends ConsumerWidget {
             ElevatedButton(
               child: const Text("問題を解く"),
               onPressed: () {
-                Navigator.pushNamed(context, '/calc_time_attack');
+                Navigator.pushNamedAndRemoveUntil(context, '/calc_time_attack', (route) => false);
               },
             ),
             ElevatedButton(
