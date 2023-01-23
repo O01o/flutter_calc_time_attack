@@ -13,10 +13,9 @@ final calendarJsonStringProvider = FutureProvider<String>((ref) async {
   return rootBundle.loadString('assets/data/calendar_stamp.json');
 });
 
-final calendarStampFutureProvider = FutureProvider<Map<String, int>>((ref) async {
-  String calendarStampString = await rootBundle.loadString('assets/data/issue_data.json');
-  Map<String, int> jsonMap = {};
-  jsonMap = json.decode(calendarStampString);
+final calendarStampFutureProvider = FutureProvider<Map<String, dynamic>>((ref) async {
+  String calendarStampString = await rootBundle.loadString('assets/data/calendar_stamp.json');
+  final jsonMap = json.decode(calendarStampString);
   
   /*
   Directory directory = await getApplicationDocumentsDirectory();
@@ -42,7 +41,7 @@ final calendarStampFutureProvider = FutureProvider<Map<String, int>>((ref) async
 });
 
 
-void jsonifyCalendarStamp(Map<String, int> jsonMap, String dateString, int time, Future<Directory> path, String fileName) {
+void jsonifyCalendarStamp(Map<String, dynamic> jsonMap, String dateString, int time, Future<Directory> path, String fileName) {
   jsonMap[dateString] = time;
   String jsonString = json.encode(jsonMap);
   var jsonFile = File(fileName);
@@ -50,10 +49,10 @@ void jsonifyCalendarStamp(Map<String, int> jsonMap, String dateString, int time,
 }
 
 
-final selectedDayStateProvider = StateProvider<DateTime>((ref) => DateTime.now());
+final selectedDayStateProvider = StateProvider.autoDispose<DateTime>((ref) => DateTime.now());
 
 
-final focusedDayStateProvider = StateProvider<DateTime>((ref) => DateTime.now());
+final focusedDayStateProvider = StateProvider.autoDispose<DateTime>((ref) => DateTime.now());
 
 
 

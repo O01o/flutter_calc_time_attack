@@ -34,7 +34,7 @@ class CalcTimeAttackScreen extends ConsumerWidget {
             if (issueDataList.isEmpty) {
               return Center(
                 child: ElevatedButton(
-                  child: const Text("start"), 
+                  child: const Text("start"),
                   onPressed: () {
                     ref.watch(issueDataListNotifierProvider.notifier).state = snapshot.data!;
                   },
