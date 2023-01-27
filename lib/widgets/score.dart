@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:flutter_calc_time_attack/model/issue_data.dart';
+import 'package:flutter_calc_time_attack/model/issue_data_provider.dart';
 
 import 'dart:io';
 import 'dart:core';
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:riverpod/riverpod.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:state_notifier/state_notifier.dart';
-import 'package:path_provider/path_provider.dart';
+// import 'package:path_provider/path_provider.dart';
 
 class ScoreScreen extends ConsumerWidget {
   ScoreScreen({Key? key, required this.title, required this.issueDataList, required this.time}) : super(key: key);
