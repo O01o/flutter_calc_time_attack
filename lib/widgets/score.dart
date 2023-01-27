@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:flutter_calc_time_attack/model/issue_data_provider.dart';
+import 'package:flutter_calc_time_attack/model/issue_data.dart';
 
 import 'dart:io';
 import 'dart:core';

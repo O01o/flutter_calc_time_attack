@@ -11,8 +11,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_calc_time_attack/utils/switch_choice.dart';
 
 
-part 'issue_data.freezed.dart';
-part 'issue_data.g.dart';
+part 'issue_data_provider.freezed.dart';
+part 'issue_data_provider.g.dart';
 
 @freezed
 class IssueData with _$IssueData {
@@ -30,6 +30,7 @@ class IssueData with _$IssueData {
     factory IssueData.fromJson(Map<String, dynamic> json)
     => _$IssueDataFromJson(json);
 }
+
 
 final issueJsonStringProvider = FutureProvider<String>((ref) async {
   return rootBundle.loadString('assets/data/issue_data.json');
@@ -109,4 +110,3 @@ class IssueDataListNotifier extends StateNotifier<List<IssueData>> {
     }
   }
 }
-
